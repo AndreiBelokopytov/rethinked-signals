@@ -1,0 +1,15 @@
+{
+  "name": "unofficial-signals",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
