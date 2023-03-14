@@ -4,7 +4,7 @@ import { Callback, Target } from "./types";
 let defaultContext: EvalContext;
 
 export class EvalContext {
-  #target?: WeakRef<Target>;
+  #target?: Target;
   #transaction?: Transaction;
 
   static default() {
@@ -15,11 +15,11 @@ export class EvalContext {
   }
 
   get target() {
-    return this.#target?.deref();
+    return this.#target;
   }
 
   run(target: Target, callback: Callback) {
-    this.#target = new WeakRef(target);
+    this.#target = target;
     if (!this.#transaction) {
       this.#transaction = new Transaction();
       this.#transaction.run(callback);
