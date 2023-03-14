@@ -1,22 +1,23 @@
 import { Callback } from "./types";
 
 export class Transaction {
-  #body?: Set<Callback>;
+  protected _body?: Set<Callback>;
 
   get isRunning() {
-    return Boolean(this.#body);
+    return Boolean(this._body);
   }
 
   run(callback: Callback) {
     if (this.isRunning) {
-      this.#body!.add(callback);
+      this._body!.add(callback);
     } else {
-      this.#body = new Set();
-      callback();
-      for (const instruction of this.#body) {
+      this._body = new Set();
+      const result = callback();
+      for (const instruction of this._body) {
         instruction();
       }
-      this.#body = undefined;
+      this._body = undefined;
+      return result;
     }
   }
 }

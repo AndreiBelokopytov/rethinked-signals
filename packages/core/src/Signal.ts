@@ -3,9 +3,7 @@ import { MutableLinkedList } from "./utils";
 import { Source, Target } from "./types";
 
 export class Signal<T> implements Source<T> {
-  #value: T;
-  #context: EvalContext;
-  #targets = new MutableLinkedList<Target>();
+  _targets = new MutableLinkedList<Target>();
 
   static create<T>(value: T) {
     const signal = new Signal(value, EvalContext.default());
@@ -13,35 +11,32 @@ export class Signal<T> implements Source<T> {
   }
 
   get value() {
-    const target = this.#context.target;
+    const target = this._context.target;
     if (target && !target.hasDependency(this)) {
-      this.#targets.add(target);
+      this._targets.add(target);
       target.addDependecy(this);
     }
-    return this.#value;
+    return this._value;
   }
 
   set value(nextValue: T) {
-    this.#value = nextValue;
-    this.#targets = this.#notifyTagets();
+    this._value = nextValue;
+    this._targets = this._notifyTagets();
   }
 
-  constructor(value: T, context: EvalContext) {
-    this.#value = value;
-    this.#context = context;
-  }
+  constructor(private _value: T, protected _context: EvalContext) {}
 
   toString() {
     return String(this.value);
   }
 
   valueOf() {
-    return this.#value;
+    return this._value;
   }
 
-  #notifyTagets() {
+  protected _notifyTagets() {
     const activeTargets = new MutableLinkedList<Target>();
-    for (const target of this.#targets) {
+    for (const target of this._targets) {
       if (!target.isDisposed && target.hasDependency(this)) {
         activeTargets.add(target);
         target.notify();

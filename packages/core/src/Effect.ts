@@ -1,48 +1,58 @@
 import { EvalContext } from "./EvalContext";
+import { Transaction } from "./Transaction";
 import { Callback, Source, Target } from "./types";
 
 export class Effect implements Target {
-  #callback: Callback;
-  #context: EvalContext;
-  #isDisposed = false;
-  #sources = new Set<Source<unknown>>();
+  protected _isDisposed = false;
+  protected _target?: Target;
+  protected _transaction?: Transaction;
+  protected _callback: Callback;
+  protected _sources = new Set<Source<unknown>>();
 
   static create(callback: Callback) {
     const effect = new Effect(callback, EvalContext.default());
-    effect.#run();
+    effect.notify();
     return effect.dispose.bind(effect);
   }
 
   get isDisposed() {
-    return this.#isDisposed;
+    return this._isDisposed;
   }
 
-  constructor(
-    callback: Callback,
-    evalContext: EvalContext,
-  ) {
-    this.#callback = callback;
-    this.#context = evalContext;
+  constructor(callback: Callback, context: EvalContext) {
+    this._callback = this._run.bind(context, this, callback);
   }
 
   notify() {
-    this.#run();
+    this._clearDependencies();
+    this._callback();
   }
 
   dispose(): void {
-    this.#isDisposed = true;
+    this._isDisposed = true;
   }
 
   addDependecy(source: Source<unknown>) {
-    this.#sources.add(source);
+    this._sources.add(source);
   }
 
   hasDependency(source: Source<unknown>) {
-    return this.#sources.has(source);
+    return this._sources.has(source);
   }
 
-  #run() {
-    this.#sources = new Set();
-    this.#context.run(this, this.#callback);
+  protected _run(target: Target, callback: Callback) {
+    this._target = target;
+    if (!this._transaction) {
+      this._transaction = new Transaction();
+      this._transaction.run(callback);
+      this._transaction = undefined;
+    } else {
+      this._transaction.run(callback);
+    }
+    this._target = undefined;
+  }
+
+  protected _clearDependencies() {
+    this._sources = new Set();
   }
 }

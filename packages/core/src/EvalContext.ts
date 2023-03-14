@@ -4,8 +4,8 @@ import { Callback, Target } from "./types";
 let defaultContext: EvalContext;
 
 export class EvalContext {
-  #target?: Target;
-  #transaction?: Transaction;
+  protected _target?: Target;
+  protected _transaction?: Transaction;
 
   static default() {
     if (!defaultContext) {
@@ -15,18 +15,6 @@ export class EvalContext {
   }
 
   get target() {
-    return this.#target;
-  }
-
-  run(target: Target, callback: Callback) {
-    this.#target = target;
-    if (!this.#transaction) {
-      this.#transaction = new Transaction();
-      this.#transaction.run(callback);
-      this.#transaction = undefined;
-    } else {
-      this.#transaction.run(callback);
-    }
-    this.#target = undefined;
+    return this._target;
   }
 }
