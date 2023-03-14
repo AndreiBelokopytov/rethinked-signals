@@ -23,7 +23,7 @@ export class Signal<T> implements Source<T> {
 
   set value(nextValue: T) {
     this.#value = nextValue;
-    this.#targets = this.#notifyTargets();
+    this.#targets = this.#notifyTagets();
   }
 
   constructor(value: T, context: EvalContext) {
@@ -39,14 +39,14 @@ export class Signal<T> implements Source<T> {
     return this.#value;
   }
 
-  #notifyTargets() {
-    const notifiedTargets = new MutableLinkedList<Target>();
+  #notifyTagets() {
+    const activeTargets = new MutableLinkedList<Target>();
     for (const target of this.#targets) {
       if (!target.isDisposed && target.hasDependency(this)) {
+        activeTargets.add(target);
         target.notify();
-        notifiedTargets.add(target);
       }
     }
-    return notifiedTargets;
+    return activeTargets;
   }
 }

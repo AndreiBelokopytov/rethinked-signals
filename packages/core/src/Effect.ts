@@ -17,9 +17,12 @@ export class Effect implements Target {
     return this.#isDisposed;
   }
 
-  constructor(callback: Callback, context: EvalContext) {
+  constructor(
+    callback: Callback,
+    evalContext: EvalContext,
+  ) {
     this.#callback = callback;
-    this.#context = context;
+    this.#context = evalContext;
   }
 
   notify() {
@@ -39,9 +42,7 @@ export class Effect implements Target {
   }
 
   #run() {
-    this.#context.enter(this);
     this.#sources = new Set();
-    this.#callback();
-    this.#context.exit();
+    this.#context.run(this, this.#callback);
   }
 }

@@ -77,4 +77,17 @@ describe("effect", () => {
     signalA.value = "aaa";
     expect(callback).toBeCalledTimes(2);
   });
+
+  it("should batch writes", () => {
+    const signal = Signal.create("a");
+    const callback = jest.fn(() => signal.value);
+    Effect.create(callback);
+
+    Effect.create(() => {
+      signal.value = "aa";
+      signal.value = "aaa";
+    });
+
+    expect(callback).toBeCalledTimes(2);
+  });
 });
