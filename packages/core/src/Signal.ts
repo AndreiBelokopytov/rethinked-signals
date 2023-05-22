@@ -14,7 +14,7 @@ export class Signal<T> implements Source<T> {
     const target = this._context.target;
     if (target && !target.hasDependency(this)) {
       this._targets.add(target);
-      target.addDependecy(this);
+      target.addDependency(this);
     }
     return this._value;
   }

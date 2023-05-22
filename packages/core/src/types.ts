@@ -11,6 +11,6 @@ export interface Source<T> {
 
 export interface Target extends Disposable {
   notify(): unknown;
-  addDependecy(source: Source<unknown>): void;
+  addDependency(source: Source<unknown>): void;
   hasDependency(source: Source<unknown>): boolean;
 }

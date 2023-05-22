@@ -32,7 +32,7 @@ export class Effect implements Target {
     this._isDisposed = true;
   }
 
-  addDependecy(source: Source<unknown>) {
+  addDependency(source: Source<unknown>) {
     this._sources.add(source);
   }
 
