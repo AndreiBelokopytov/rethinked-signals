@@ -21,7 +21,7 @@ export class Signal<T> implements Source<T> {
 
   set value(nextValue: T) {
     this._value = nextValue;
-    this._targets = this._notifyTagets();
+    this._targets = this._notifyTargets();
   }
 
   constructor(private _value: T, protected _context: EvalContext) {}
@@ -34,7 +34,7 @@ export class Signal<T> implements Source<T> {
     return this._value;
   }
 
-  protected _notifyTagets() {
+  protected _notifyTargets() {
     const activeTargets = new MutableLinkedList<Target>();
     for (const target of this._targets) {
       if (!target.isDisposed && target.hasDependency(this)) {
