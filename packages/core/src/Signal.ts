@@ -2,12 +2,11 @@ import { EvalContext } from "./EvalContext";
 import { MutableLinkedList } from "./utils";
 import { Source, Target } from "./types";
 
-export class Signal<T> implements Source<T> {
+export class Signal<Value> implements Source<Value> {
   _targets = new MutableLinkedList<Target>();
 
-  static create<T>(value: T) {
-    const signal = new Signal(value, EvalContext.default());
-    return signal;
+  static create<Value>(value: Value) {
+    return new Signal(value, EvalContext.default());
   }
 
   get value() {
@@ -19,12 +18,12 @@ export class Signal<T> implements Source<T> {
     return this._value;
   }
 
-  set value(nextValue: T) {
+  set value(nextValue: Value) {
     this._value = nextValue;
     this._targets = this._notifyTargets();
   }
 
-  constructor(private _value: T, protected _context: EvalContext) {}
+  constructor(private _value: Value, protected _context: EvalContext) {}
 
   toString() {
     return String(this.value);
