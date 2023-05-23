@@ -4,9 +4,6 @@ import { Callback, Source, Target } from "./types";
 
 export class Effect implements Target {
   protected _isDisposed = false;
-  protected _target?: Target;
-  protected _transaction?: Transaction;
-  protected _callback: Callback;
   protected _sources = new Set<Source<unknown>>();
 
   static create(callback: Callback) {
@@ -19,13 +16,11 @@ export class Effect implements Target {
     return this._isDisposed;
   }
 
-  constructor(callback: Callback, context: EvalContext) {
-    this._callback = this._run.bind(context, this, callback);
-  }
+  constructor(protected _callback: Callback, protected _context: EvalContext) {}
 
   notify() {
     this._clearDependencies();
-    this._callback();
+    this._context.runInContext(this, this._callback);
   }
 
   dispose(): void {
@@ -38,18 +33,6 @@ export class Effect implements Target {
 
   hasDependency(source: Source<unknown>) {
     return this._sources.has(source);
-  }
-
-  protected _run(target: Target, callback: Callback) {
-    this._target = target;
-    if (!this._transaction) {
-      this._transaction = new Transaction();
-      this._transaction.run(callback);
-      this._transaction = undefined;
-    } else {
-      this._transaction.run(callback);
-    }
-    this._target = undefined;
   }
 
   protected _clearDependencies() {
