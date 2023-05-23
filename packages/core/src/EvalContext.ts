@@ -1,11 +1,9 @@
-import { Transaction } from "./Transaction";
-import { Callback, Target } from "./types";
+import { Target } from "./types";
 
 let defaultContext: EvalContext;
 
 export class EvalContext {
   protected _target?: Target;
-  protected _transaction?: Transaction;
 
   static default() {
     if (!defaultContext) {

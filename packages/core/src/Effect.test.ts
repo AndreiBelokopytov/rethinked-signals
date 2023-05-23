@@ -59,10 +59,10 @@ describe("effect", () => {
   it("should conditionally unsubscribe from signals", () => {
     const signalA = Signal.create("a");
     const signalB = Signal.create("b");
-    const condSignal = Signal.create(true);
+    const signalC = Signal.create(true);
 
     const callback = jest.fn(() => {
-      return condSignal.value ? signalA.value : signalB.value;
+      return signalC.value ? signalA.value : signalB.value;
     });
 
     Effect.create(callback);
@@ -71,7 +71,7 @@ describe("effect", () => {
     signalB.value = "bb";
     expect(callback).toBeCalledTimes(1);
 
-    condSignal.value = false;
+    signalC.value = false;
     expect(callback).toBeCalledTimes(2);
 
     signalA.value = "aaa";
