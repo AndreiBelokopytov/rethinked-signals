@@ -1,3 +1,10 @@
+pre-commit:
+  commands:
+    typecheck:
+      run: npx --no -c 'tsc --noEmit'
+    prettier:
+      run: npx --no -c 'prettier --check --ignore-unknown {files}'
+
 pre-push:
   commands:
     test:
