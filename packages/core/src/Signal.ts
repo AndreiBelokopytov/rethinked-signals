@@ -5,10 +5,6 @@ import { Target } from "./Target";
 export class Signal<Value> implements Source<Value> {
   protected _targets: Target[] = [];
 
-  static create<Value>(value: Value) {
-    return new Signal(value, EvalContext.default());
-  }
-
   get value() {
     const target = this._context.target;
     if (target && !target.hasDependency(this)) {
@@ -42,4 +38,11 @@ export class Signal<Value> implements Source<Value> {
       }
     }
   }
+}
+
+export function createSignal<Value>(
+  value: Value,
+  context: EvalContext = EvalContext.default()
+) {
+  return new Signal(value, context);
 }

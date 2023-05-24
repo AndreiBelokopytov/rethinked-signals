@@ -1,18 +1,32 @@
-import { Signal } from "./Signal";
-import { Effect } from "./Effect";
-import { EvalContext } from "./EvalContext";
+import { createSignal } from "./Signal";
+import { createEffect } from "./Effect";
+import {
+  createContext,
+  getDefaultContext,
+  runInTransaction,
+} from "./EvalContext";
 
 describe("EvalContext", () => {
   it("should batch writes", () => {
-    const signal = Signal.create("a");
+    const signal = createSignal("a");
     const callback = jest.fn(() => signal.value);
-    Effect.create(callback);
+    createEffect(callback);
 
-    EvalContext.default().runInTransaction(() => {
+    runInTransaction(() => {
       signal.value = "aa";
       signal.value = "aaa";
     });
 
     expect(callback).toBeCalledTimes(2);
+  });
+
+  it("should return default context", () => {
+    const contextA = getDefaultContext();
+    const contextB = getDefaultContext();
+    const contextC = createContext();
+
+    expect(contextA === contextB).toBe(true);
+    expect(contextA === contextC).toBe(false);
+    expect(contextB === contextC).toBe(false);
   });
 });

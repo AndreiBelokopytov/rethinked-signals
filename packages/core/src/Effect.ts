@@ -5,12 +5,6 @@ import { Target } from "./Target";
 export class Effect implements Disposable {
   protected _target: Target;
 
-  static create(callback: Callback) {
-    const effect = new Effect(callback, EvalContext.default());
-    effect.run();
-    return effect;
-  }
-
   get isDisposed() {
     return this._target.isDisposed;
   }
@@ -26,4 +20,13 @@ export class Effect implements Disposable {
   dispose() {
     this._target.dispose();
   }
+}
+
+export function createEffect(
+  callback: Callback,
+  context: EvalContext = EvalContext.default()
+) {
+  const effect = new Effect(callback, context);
+  effect.run();
+  return effect;
 }
