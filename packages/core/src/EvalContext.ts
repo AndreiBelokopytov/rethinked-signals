@@ -29,8 +29,7 @@ export class EvalContext {
     return target;
   }
 
-  protected _runInContext(callback: Callback, target: Target) {
-    this._target = target;
+  runInTransaction(callback: Callback) {
     if (!this._transaction) {
       this._transaction = new Transaction();
       this._transaction.run(callback);
@@ -38,6 +37,11 @@ export class EvalContext {
     } else {
       this._transaction.run(callback);
     }
+  }
+
+  protected _runInContext(callback: Callback, target: Target) {
+    this._target = target;
+    this.runInTransaction(callback);
     this._target = undefined;
   }
 }
