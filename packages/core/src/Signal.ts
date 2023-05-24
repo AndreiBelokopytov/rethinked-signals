@@ -1,5 +1,6 @@
 import { EvalContext } from "./EvalContext";
-import { Source, Target } from "./types";
+import { Source } from "./types";
+import { Target } from "./Target";
 
 export class Signal<Value> implements Source<Value> {
   protected _targets: Target[] = [];

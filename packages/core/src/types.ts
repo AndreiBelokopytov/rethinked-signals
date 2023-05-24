@@ -5,12 +5,8 @@ export interface Disposable {
 
 export type Callback = () => unknown;
 
+export type ComputedFn<Value> = () => Value;
+
 export interface Source<T> {
   value: T;
-}
-
-export interface Target extends Disposable {
-  notify(): unknown;
-  addDependency(source: Source<unknown>): void;
-  hasDependency(source: Source<unknown>): boolean;
 }

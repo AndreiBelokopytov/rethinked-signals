@@ -1,41 +1,29 @@
 import { EvalContext } from "./EvalContext";
-import { Transaction } from "./Transaction";
-import { Callback, Source, Target } from "./types";
+import {Callback, Disposable} from "./types";
+import { Target } from "./Target";
 
-export class Effect implements Target {
-  protected _isDisposed = false;
-  protected _sources = new Set<Source<unknown>>();
+export class Effect implements Disposable {
+  protected _target: Target;
 
   static create(callback: Callback) {
     const effect = new Effect(callback, EvalContext.default());
-    effect.notify();
+    effect.run();
     return effect.dispose.bind(effect);
   }
 
   get isDisposed() {
-    return this._isDisposed;
+    return this._target.isDisposed;
   }
 
-  constructor(protected _callback: Callback, protected _context: EvalContext) {}
-
-  notify() {
-    this._clearDependencies();
-    this._context.runInContext(this, this._callback);
+  constructor(protected _callback: Callback, _context: EvalContext) {
+    this._target = _context.bind(_callback);
   }
 
-  dispose(): void {
-    this._isDisposed = true;
+  run() {
+    this._target.notify();
   }
 
-  addDependency(source: Source<unknown>) {
-    this._sources.add(source);
-  }
-
-  hasDependency(source: Source<unknown>) {
-    return this._sources.has(source);
-  }
-
-  protected _clearDependencies() {
-    this._sources = new Set();
+  dispose() {
+    this._target.dispose();
   }
 }

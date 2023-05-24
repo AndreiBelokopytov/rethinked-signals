@@ -1,5 +1,6 @@
-import {Callback, Target} from "./types";
-import {Transaction} from "./Transaction";
+import { Callback } from "./types";
+import { Transaction } from "./Transaction";
+import { Target } from "./Target";
 
 let defaultContext: EvalContext;
 
@@ -18,7 +19,13 @@ export class EvalContext {
     return this._target;
   }
 
-  runInContext(target: Target, callback: Callback) {
+  bind(callback: Callback) {
+    const target = new Target();
+    target.setCallback(this._runInContext.bind(this, callback, target));
+    return target;
+  }
+
+  protected _runInContext(callback: Callback, target: Target) {
     this._target = target;
     if (!this._transaction) {
       this._transaction = new Transaction();
