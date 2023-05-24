@@ -20,8 +20,12 @@ export class EvalContext {
   }
 
   bind(callback: Callback) {
-    const target = new Target();
-    target.setCallback(this._runInContext.bind(this, callback, target));
+    const target = new Target(callback);
+    target.notify = this._runInContext.bind(
+      this,
+      target.notify.bind(target),
+      target
+    );
     return target;
   }
 

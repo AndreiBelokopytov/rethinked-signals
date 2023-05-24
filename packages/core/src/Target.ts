@@ -1,42 +1,42 @@
-import {Callback, Disposable, Source} from "./types";
+import { Callback, Disposable, Source } from "./types";
 
 export class Target implements Disposable {
-    private _isDisposed = false
-    protected _sources = new Set<Source<unknown>>();
+  private _isDisposed = false;
+  protected _sources = new Set<Source<unknown>>();
 
-    get isDisposed() {
-        return this._isDisposed;
+  get isDisposed() {
+    return this._isDisposed;
+  }
+
+  protected _callback?: WeakRef<Callback>;
+
+  constructor(callback: Callback) {
+    this._callback = new WeakRef(callback);
+  }
+
+  notify() {
+    this._clearDependencies();
+    const callback = this._callback?.deref();
+    if (!callback) {
+      this._isDisposed = true;
+      return;
     }
+    callback();
+  }
 
-    protected _callback?: WeakRef<Callback>;
+  dispose(): void {
+    this._isDisposed = true;
+  }
 
-    notify() {
-        this._clearDependencies();
-        const callback = this._callback?.deref()
-        if (!callback) {
-            this._isDisposed = true;
-            return;
-        }
-        callback();
-    }
+  addDependency(source: Source<unknown>) {
+    this._sources.add(source);
+  }
 
-    dispose(): void {
-        this._isDisposed = true;
-    }
+  hasDependency(source: Source<unknown>) {
+    return this._sources.has(source);
+  }
 
-    addDependency(source: Source<unknown>) {
-        this._sources.add(source);
-    }
-
-    hasDependency(source: Source<unknown>) {
-        return this._sources.has(source);
-    }
-
-    setCallback(value: Callback) {
-        this._callback = new WeakRef<Callback>(value);
-    }
-
-    protected _clearDependencies() {
-        this._sources = new Set();
-    }
+  protected _clearDependencies() {
+    this._sources = new Set();
+  }
 }

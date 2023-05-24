@@ -28,14 +28,14 @@ describe("Signal", () => {
     const callback3 = jest.fn(() => signal.value);
 
     Effect.create(callback1);
-    const dispose = Effect.create(callback2);
+    const effect = Effect.create(callback2);
     Effect.create(callback3);
 
     expect(callback1).toBeCalledTimes(1);
     expect(callback2).toBeCalledTimes(1);
     expect(callback3).toBeCalledTimes(1);
 
-    dispose();
+    effect.dispose();
 
     signal.value = 1;
     expect(callback1).toBeCalledTimes(2);

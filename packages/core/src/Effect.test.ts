@@ -1,5 +1,6 @@
 import { Effect } from "./Effect";
 import { Signal } from "./Signal";
+import Mock = jest.Mock;
 
 describe("effect", () => {
   it("should init with value", () => {
@@ -9,6 +10,14 @@ describe("effect", () => {
 
     expect(callback).toBeCalled();
     expect(callback).toReturnWith(123);
+  });
+
+  it("should be disposable", () => {
+    const s = Signal.create(123);
+    const callback = jest.fn(() => s.value);
+    const effect = Effect.create(callback);
+    effect.dispose();
+    expect(effect.isDisposed).toBe(true);
   });
 
   it("should subscribe to signals", () => {
@@ -36,9 +45,9 @@ describe("effect", () => {
     const signalA = Signal.create("a");
     const signalB = Signal.create("b");
     const callback = jest.fn(() => signalA.value + " " + signalB.value);
-    const dispose = Effect.create(callback);
+    const effect = Effect.create(callback);
 
-    dispose();
+    effect.dispose();
     expect(callback).toBeCalledTimes(1);
 
     signalA.value = "aa";
@@ -49,9 +58,9 @@ describe("effect", () => {
   it("should unsubscribe from signal", () => {
     const signal = Signal.create(123);
     const callback = jest.fn(() => signal.value);
-    const unsubscribe = Effect.create(callback);
+    const effect = Effect.create(callback);
 
-    unsubscribe();
+    effect.dispose();
     signal.value = 42;
     expect(callback).toBeCalledTimes(1);
   });
@@ -89,5 +98,18 @@ describe("effect", () => {
     });
 
     expect(callback).toBeCalledTimes(2);
+  });
+
+  it("should dispose when callback is removed", () => {
+    const signal = Signal.create("a");
+    let callback: Mock | undefined = jest.fn(() => signal.value);
+    const effect = Effect.create(callback);
+
+    expect(callback).toBeCalledTimes(1);
+
+    callback = undefined;
+    signal.value = "b";
+
+    expect(effect.isDisposed);
   });
 });

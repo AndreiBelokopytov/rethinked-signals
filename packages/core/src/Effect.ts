@@ -1,5 +1,5 @@
 import { EvalContext } from "./EvalContext";
-import {Callback, Disposable} from "./types";
+import { Callback, Disposable } from "./types";
 import { Target } from "./Target";
 
 export class Effect implements Disposable {
@@ -8,7 +8,7 @@ export class Effect implements Disposable {
   static create(callback: Callback) {
     const effect = new Effect(callback, EvalContext.default());
     effect.run();
-    return effect.dispose.bind(effect);
+    return effect;
   }
 
   get isDisposed() {
