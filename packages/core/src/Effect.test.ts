@@ -1,6 +1,5 @@
 import { createEffect } from "./Effect";
 import { createSignal } from "./Signal";
-import Mock = jest.Mock;
 
 describe("effect", () => {
   it("should init with value", () => {
@@ -98,18 +97,5 @@ describe("effect", () => {
     });
 
     expect(callback).toBeCalledTimes(2);
-  });
-
-  it("should dispose when callback is removed", () => {
-    const signal = createSignal("a");
-    let callback: Mock | undefined = jest.fn(() => signal.value);
-    const effect = createEffect(callback);
-
-    expect(callback).toBeCalledTimes(1);
-
-    callback = undefined;
-    signal.value = "b";
-
-    expect(effect.isDisposed);
   });
 });

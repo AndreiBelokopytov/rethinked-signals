@@ -8,20 +8,11 @@ export class Target implements Disposable {
     return this._isDisposed;
   }
 
-  protected _callback?: WeakRef<Callback>;
-
-  constructor(callback: Callback) {
-    this._callback = new WeakRef(callback);
-  }
+  constructor(protected _callback: Callback) {}
 
   notify() {
     this._clearDependencies();
-    const callback = this._callback?.deref();
-    if (!callback) {
-      this._isDisposed = true;
-      return;
-    }
-    callback();
+    this._callback();
   }
 
   dispose(): void {
