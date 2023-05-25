@@ -1,11 +1,11 @@
 pre-commit:
   commands:
     typecheck:
-      run: npx --no -c 'tsc --noEmit'
+      run: npx tsc --noEmit
     prettier:
-      run: npx --no -c 'prettier --check --ignore-unknown {files}'
+      run: npx prettier -u --check {staged_files}
 
 pre-push:
   commands:
-    test:
-      run: npm test
+    coverage:
+      run: npm run test:coverage
