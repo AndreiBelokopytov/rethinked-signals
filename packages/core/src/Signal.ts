@@ -39,10 +39,3 @@ export class Signal<Value> implements Source<Value> {
     }
   }
 }
-
-export function createSignal<Value>(
-  value: Value,
-  context: EvalContext = EvalContext.default()
-) {
-  return new Signal(value, context);
-}

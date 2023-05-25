@@ -21,12 +21,3 @@ export class Effect implements Disposable {
     this._target.dispose();
   }
 }
-
-export function createEffect(
-  callback: Callback,
-  context: EvalContext = EvalContext.default()
-) {
-  const effect = new Effect(callback, context);
-  effect.run();
-  return effect;
-}

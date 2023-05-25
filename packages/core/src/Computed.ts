@@ -7,7 +7,3 @@ export class Computed<Value> implements Source<Value> {
 
   constructor(private _computedFn: ComputedFn<Value>) {}
 }
-
-export function createComputed<Value>(computedFn: ComputedFn<Value>) {
-  return new Computed(computedFn);
-}

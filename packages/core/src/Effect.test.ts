@@ -1,5 +1,4 @@
-import { createEffect } from "./Effect";
-import { createSignal } from "./Signal";
+import { createEffect, createSignal } from "@signals/core";
 
 describe("effect", () => {
   it("should init with value", () => {

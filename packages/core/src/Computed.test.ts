@@ -1,6 +1,4 @@
-import { createSignal, Signal } from "./Signal";
-import { createComputed } from "./Computed";
-import { createEffect } from "./Effect";
+import { createComputed, createEffect, createSignal } from "@signals/core";
 
 describe("Signal", () => {
   it("should return value", () => {

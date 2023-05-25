@@ -1,0 +1,10 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript"
+    },
+    "paths": {
+      "@signals/core": ["./packages/core/src"]
+    }
+  }
+}

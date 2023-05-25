@@ -1,5 +1,5 @@
 {
-  "name": "@unofficial-signals/core",
+  "name": "@signals/core",
   "version": "1.0.0",
   "description": "Manage state with style in every framework",
   "keywords": [],

@@ -1,10 +1,10 @@
-import { createSignal } from "./Signal";
-import { createEffect } from "./Effect";
 import {
   createContext,
+  createEffect,
+  createSignal,
   getDefaultContext,
   runInTransaction,
-} from "./EvalContext";
+} from "@signals/core";
 
 describe("EvalContext", () => {
   it("should batch writes", () => {

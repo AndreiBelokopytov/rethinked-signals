@@ -45,18 +45,3 @@ export class EvalContext {
     this._target = undefined;
   }
 }
-
-export function runInTransaction(
-  callback: Callback,
-  context: EvalContext = EvalContext.default()
-) {
-  context.runInTransaction(callback);
-}
-
-export function createContext() {
-  return new EvalContext();
-}
-
-export function getDefaultContext() {
-  return EvalContext.default();
-}
