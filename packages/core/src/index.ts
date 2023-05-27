@@ -1,4 +1,4 @@
-import { Callback, ComputedFn } from "./types";
+import { Callback } from "./types";
 import { Computed } from "./Computed";
 import { EvalContext } from "./EvalContext";
 import { Signal } from "./Signal";
@@ -13,8 +13,11 @@ export function createSignal<Value>(
   return new Signal(value, context);
 }
 
-export function createComputed<Value>(computedFn: ComputedFn<Value>) {
-  return new Computed(computedFn);
+export function createComputed<Value>(
+  callback: Callback<Value>,
+  context: EvalContext = EvalContext.default()
+) {
+  return new Computed(callback, context);
 }
 
 export function createEffect(

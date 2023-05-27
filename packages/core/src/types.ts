@@ -3,10 +3,10 @@ export interface Disposable {
   dispose(): void;
 }
 
-export type Callback = () => unknown;
-
-export type ComputedFn<Value> = () => Value;
+export type Callback<Value = unknown> = () => Value;
 
 export interface Source<T> {
   value: T;
+
+  peek(): T;
 }

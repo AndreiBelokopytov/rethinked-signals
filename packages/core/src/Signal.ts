@@ -23,6 +23,10 @@ export class Signal<Value> implements Source<Value> {
 
   constructor(private _value: Value, protected _context: EvalContext) {}
 
+  peek(): Value {
+    return this._value;
+  }
+
   toString() {
     return String(this.value);
   }

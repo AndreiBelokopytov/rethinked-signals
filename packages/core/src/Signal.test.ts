@@ -41,4 +41,30 @@ describe("Signal", () => {
     expect(callback2).toBeCalledTimes(1);
     expect(callback3).toBeCalledTimes(2);
   });
+
+  describe(".peek()", () => {
+    it("should get value", () => {
+      const s = createSignal(1);
+      expect(s.peek()).toBe(1);
+    });
+
+    it("should get the updated value after a value change", () => {
+      const s = createSignal(1);
+      s.value = 2;
+      expect(s.peek()).toBe(2);
+    });
+
+    it("should not make surrounding effect depend on the signal", () => {
+      const s = createSignal(1);
+      const callback = jest.fn(() => {
+        s.peek();
+      });
+
+      createEffect(callback);
+      expect(callback).toBeCalledTimes(1);
+
+      s.value = 2;
+      expect(callback).toBeCalledTimes(1);
+    });
+  });
 });

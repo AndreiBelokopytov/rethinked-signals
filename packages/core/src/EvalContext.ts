@@ -21,15 +21,13 @@ export class EvalContext {
 
   bind(callback: Callback) {
     const target = new Target(callback);
-    target.notify = this._runInContext.bind(
-      this,
-      target.notify.bind(target),
-      target
-    );
+    const boundCallback = target.notify.bind(target);
+    target.notify = () =>
+      this.runInContext(() => this.runInTransaction(boundCallback), target);
     return target;
   }
 
-  runInTransaction(callback: Callback) {
+  runInTransaction<Value>(callback: Callback<Value>) {
     if (!this._transaction) {
       this._transaction = new Transaction();
       this._transaction.run(callback);
@@ -39,9 +37,18 @@ export class EvalContext {
     }
   }
 
-  protected _runInContext(callback: Callback, target: Target) {
+  runInContext<Value>(callback: Callback<Value>, target: Target) {
     this._target = target;
-    this.runInTransaction(callback);
+    const result = callback();
     this._target = undefined;
+    return result;
+  }
+
+  runOutOfContext<Value>(callback: Callback<Value>) {
+    const target = this._target;
+    this._target = undefined;
+    const result = callback();
+    this._target = target;
+    return result;
   }
 }
